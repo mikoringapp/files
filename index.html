@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>মিকো রিং - পুরস্কার অ্যাপ</title>
+  <!-- Font Awesome 6 (free icons for Telegram, WhatsApp, Gmail, etc.) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f0f2f5;
+      font-family: 'Kalpurush', 'Hind Siliguri', 'Noto Sans Bengali', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Kalpurush Font */
+    @font-face {
+      font-family: 'Kalpurush';
+      src: url('https://cdn.jsdelivr.net/npm/kalpurush@1.0.0/fonts/Kalpurush.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* main white container */
+    .app-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 1.8rem 1.8rem 1.5rem 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      overflow-x: hidden;
+      padding: 0 1.2rem 2rem 1.2rem;
+    }
+
+    /* Sticky header (always on top) */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 100;
+      padding: 0.8rem 0 0.6rem 0;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e63946;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 12px;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .app-logo {
+      height: 44px;
+      width: auto;
+      max-width: 48px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .app-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c92a2a, #e63946);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    /* 3-line menu button */
+    .menu-btn {
+      background: #fff0f0;
+      border: 1px solid #ffc2c2;
+      width: 48px;
+      height: 48px;
+      border-radius: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+    .menu-btn span {
+      width: 26px;
+      height: 3px;
+      background-color: #e63946;
+      border-radius: 4px;
+    }
+    .menu-btn:hover {
+      background: #ffe0e0;
+      transform: scale(0.96);
+    }
+
+    /* video container */
+    .video-tutorial {
+      background: #1e1a17;
+      border-radius: 2rem;
+      padding: 0.8rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 12px 18px rgba(0,0,0,0.15);
+    }
+    .video-label {
+      font-size: 0.85rem;
+      color: #ffd9b5;
+      background: #a52632;
+      display: inline-block;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    video {
+      width: 100%;
+      border-radius: 1.5rem;
+      background: #000;
+      max-height: 500px;
+      object-fit: cover;
+      aspect-ratio: 9 / 16;
+    }
+    @media (min-width: 500px) {
+      video {
+        aspect-ratio: 9 / 16;
+        max-height: 480px;
+      }
+    }
+
+    /* main button red theme */
+    .main-action {
+      margin: 1.8rem 0 1.2rem;
+      text-align: center;
+    }
+    .reward-btn {
+      background: radial-gradient(circle at 30% 20%, #e63946, #b91c1c);
+      border: none;
+      width: 90%;
+      padding: 1rem;
+      font-size: 1.7rem;
+      font-weight: bold;
+      font-family: 'Kalpurush', monospace;
+      color: white;
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #7f1a1a;
+      transition: 0.08s linear;
+      letter-spacing: 1px;
+    }
+    .reward-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 4px 0 #7f1a1a;
+    }
+    .timer-status {
+      font-size: 1rem;
+      background: #ffe6e6;
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      margin-top: 12px;
+      font-weight: 600;
+      color: #a51b2c;
+      border: 1px solid #ffb3b3;
+    }
+
+    /* about section */
+    .about-box {
+      background: #fffaf5;
+      border-left: 8px solid #e63946;
+      padding: 1rem 1.2rem;
+      border-radius: 1.5rem;
+      margin: 1.5rem 0 1.5rem;
+      font-size: 1rem;
+      line-height: 1.55;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.03);
+    }
+
+    /* prize section */
+    .prize-section {
+      background: linear-gradient(115deg, #fff6f0, #ffefea);
+      border-radius: 1.8rem;
+      padding: 1.2rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid #ffcdcd;
+    }
+    .prize-title {
+      font-size: 1.7rem;
+      font-weight: 800;
+      text-align: center;
+      color: #c7362f;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .prize-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .prize-item {
+      background: white;
+      border-radius: 60px;
+      padding: 0.7rem 1.3rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid #ffbcbc;
+    }
+    .prize-rank {
+      background: #e63946;
+      color: white;
+      border-radius: 40px;
+      padding: 0.2rem 0.9rem;
+      font-size: 1rem;
+    }
+    .prize-amount {
+      color: #c92a2a;
+      font-weight: 800;
+      font-size: 1.4rem;
+    }
+
+    footer {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 1.8rem;
+      color: #b3574b;
+      padding-bottom: 0.5rem;
+    }
+
+    /* Sidebar menu overlay */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.25s ease;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      background: #fffaf5;
+      box-shadow: -5px 0 20px rgba(0,0,0,0.25);
+      padding: 2rem 1rem;
+      z-index: 1100;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      font-family: 'Kalpurush', monospace;
+    }
+    .sidebar a, .sidebar .info-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff0ea;
+      padding: 12px 18px;
+      border-radius: 50px;
+      text-decoration: none;
+      color: #ac2e2e;
+      font-weight: 600;
+      transition: 0.1s;
+      font-size: 1rem;
+      border: 1px solid #ffcbcb;
+    }
+    .sidebar a i {
+      width: 24px;
+      font-size: 1.4rem;
+      text-align: center;
+    }
+    /* specific icon colors for brand recognition */
+    .sidebar a .fa-telegram {
+      color: #0088cc;
+    }
+    .sidebar a .fa-whatsapp {
+      color: #25D366;
+    }
+    .sidebar a .fa-envelope {
+      color: #EA4335;
+    }
+    .sidebar a .fa-phone-alt {
+      color: #34B7F1;
+    }
+    .sidebar a:active, .sidebar .info-text:active {
+      background: #ffe0d6;
+    }
+    .close-sidebar {
+      background: #e63946;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+
+    button {
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <!-- Sticky header with logo left side of app title -->
+  <div class="sticky-header">
+    <div class="logo-title">
+      <img class="app-logo" src="https://raw.githubusercontent.com/mikoringapp/files/refs/heads/main/mikoring_only.png" alt="Miko Ring Logo" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23e63946%22/%3E%3Ctext x=%2250%22 y=%2265%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22 font-weight=%22bold%22%3EMR%3C/text%3E%3C/svg%3E';">
+      <div class="app-title">Miko Ring</div>
+    </div>
+    <button class="menu-btn" id="hamburgerBtn" aria-label="মেনু">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- tutorial video section (vertical & rich player) -->
+  <div class="video-tutorial">
+    <div class="video-label">📱 টিউটোরিয়াল ভিডিও | কিভাবে ব্যবহার করবেন</div>
+    <video controls playsinline preload="metadata" poster="https://test-videos.co.uk/vids/bigbuckbunny/poster.png">
+      <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_2MB.mp4" type="video/mp4">
+      আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।
+    </video>
+    <div style="font-size: 0.7rem; text-align:center; margin-top: 6px; color:#ffc5b3;">⬆️ টিউটোরিয়াল: পুরস্কার লিংক কিভাবে খুলবেন</div>
+  </div>
+
+  <!-- Main Button : open link inside app (25h cooldown) -->
+  <div class="main-action">
+    <button class="reward-btn" id="openLinkBtn">🎲 পুরস্কারের লিংক খুলুন 🎲</button>
+    <div class="timer-status" id="cooldownDisplay">✅ প্রস্তুত (ক্লিক করুন)</div>
+  </div>
+
+  <!-- about us section (Bengali, kalpurush) -->
+  <div class="about-box">
+    <strong>📢 আমাদের অ্যাপ সম্পর্কে :</strong><br>
+    আমাদের এই App দিয়ে আপনি চাইলে প্রতিদিন পুরস্কার পেতে পারেন এবং পুরস্কার এর লিস্ট নিচে দেওয়া আছে । তবে একটি কথা আমরা প্রতিদিন কিছু ভাগ্যবান মানুষ কেই পুরস্কার দিবো তবে আপনি একদিন না পেলে পরের দিন আবার চেষ্টা করতে পারেন । আর আপনি যদি পুরস্কার পান তাহলে আপনার দেওয়া নাম্বারে যোগাযোগ করে আপনাকে পুরস্কার বুঝিয়ে দেওয়া হবে ।
+  </div>
+
+  <!-- Prize section with red accents -->
+  <div class="prize-section">
+    <div class="prize-title">🏆 পুরস্কার সমূহ 🏆</div>
+    <div class="prize-list">
+      <div class="prize-item"><span class="prize-rank">১ম</span><span class="prize-amount">৳১০০০ টাকা</span></div>
+      <div class="prize-item"><span class="prize-rank">২য়</span><span class="prize-amount">৳৫০০ টাকা</span></div>
+      <div class="prize-item"><span class="prize-rank">৩য়</span><span class="prize-amount">৳২০০ টাকা</span></div>
+      <div class="prize-item"><span class="prize-rank">৪র্থ</span><span class="prize-amount">৳১০০ টাকা</span></div>
+      <div class="prize-item"><span class="prize-rank">৫ম</span><span class="prize-amount">৳২০ টাকা</span></div>
+    </div>
+  </div>
+  <footer>⭐ প্রতিদিন ভাগ্য চেষ্টা করুন | মিকো রিং</footer>
+</div>
+
+<!-- Sidebar (3-line menu) with official app logos -->
+<div id="sidebarOverlay" class="sidebar-overlay">
+  <div id="sidebarPanel" class="sidebar">
+    <button class="close-sidebar" id="closeSidebarBtn">✖ বন্ধ করুন</button>
+    <a href="https://t.me/mikoring" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-telegram"></i> Telegram - @mikoring
+    </a>
+    <a href="https://wa.me/8801909782488?text=হ্যালো%20মিকো%20রিং" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-whatsapp"></i> WhatsApp +8801909782488
+    </a>
+    <a href="tel:+8809658073149">
+      <i class="fas fa-phone-alt"></i> ফোন +8809658073149
+    </a>
+    <a href="mailto:mail@mikoring.com">
+      <i class="fas fa-envelope"></i> Gmail - mail@mikoring.com
+    </a>
+    <div class="info-text">
+      <i class="fas fa-user-circle"></i> ডেভেলপার: Minhaz Hasan Rakib
+    </div>
+    <div class="info-text">
+      <i class="fas fa-map-marker-alt"></i> অফিস: গাজীপুর চৌরাস্তা, গাজীপুর, ঢাকা, বাংলাদেশ
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- CONSTANTS ----------
+    const COOLDOWN_HOURS = 25;
+    const COOLDOWN_MS = COOLDOWN_HOURS * 60 * 60 * 1000;
+    const STORAGE_KEY = "mikoRing_lastOpenTimestamp";
+    const LINK_URL = "https://mikoringapp.github.io/files/go.html";
+
+    // DOM elements
+    const openBtn = document.getElementById("openLinkBtn");
+    const cooldownDisplaySpan = document.getElementById("cooldownDisplay");
+
+    // Sidebar elements
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const sidebarPanel = document.getElementById("sidebarPanel");
+    const closeSidebarBtn = document.getElementById("closeSidebarBtn");
+
+    let timerInterval = null;
+
+    function getRemainingCooldown() {
+      const lastOpen = localStorage.getItem(STORAGE_KEY);
+      if (!lastOpen) return 0;
+      const lastTime = parseInt(lastOpen, 10);
+      if (isNaN(lastTime)) return 0;
+      const now = Date.now();
+      const elapsed = now - lastTime;
+      if (elapsed >= COOLDOWN_MS) return 0;
+      return COOLDOWN_MS - elapsed;
+    }
+
+    function formatTime(ms) {
+      if (ms <= 0) return "প্রস্তুত!";
+      const totalSec = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSec / 3600);
+      const minutes = Math.floor((totalSec % 3600) / 60);
+      const seconds = totalSec % 60;
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function updateCooldownUI() {
+      const remaining = getRemainingCooldown();
+      if (remaining <= 0) {
+        cooldownDisplaySpan.innerHTML = "✅ রেডি! ২৫ ঘন্টা শেষ, লিংক খোলা যাবে ✅";
+        cooldownDisplaySpan.style.background = "#e6f4e6";
+        cooldownDisplaySpan.style.color = "#b91c1c";
+        openBtn.disabled = false;
+        openBtn.style.opacity = "1";
+      } else {
+        const timeStr = formatTime(remaining);
+        cooldownDisplaySpan.innerHTML = `⏳ পুনরায় খুলতে বাকি: ${timeStr} ⏳`;
+        cooldownDisplaySpan.style.background = "#ffefef";
+        cooldownDisplaySpan.style.color = "#b33b3b";
+        openBtn.disabled = false;
+        openBtn.style.opacity = "0.95";
+      }
+    }
+
+    function startTimerRefresh() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        updateCooldownUI();
+      }, 1000);
+    }
+
+    function setCooldown() {
+      const now = Date.now();
+      localStorage.setItem(STORAGE_KEY, now.toString());
+      updateCooldownUI();
+    }
+
+    function handleMainButtonClick() {
+      const remaining = getRemainingCooldown();
+      if (remaining > 0) {
+        const remainText = formatTime(remaining);
+        alert(`⛔ আপনি ইতিমধ্যে লিংক ব্যবহার করেছেন!\nআবার খুলতে অপেক্ষা করুন: ${remainText}\n২৫ ঘন্টা পরে আবার চেষ্টা করুন।`);
+        return;
+      }
+      setCooldown();
+      window.location.href = LINK_URL;
+    }
+
+    openBtn.addEventListener("click", handleMainButtonClick);
+
+    // Sidebar handlers
+    function openSidebar() {
+      sidebarOverlay.classList.add("active");
+      sidebarPanel.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+    function closeSidebar() {
+      sidebarOverlay.classList.remove("active");
+      sidebarPanel.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    hamburgerBtn.addEventListener("click", openSidebar);
+    closeSidebarBtn.addEventListener("click", closeSidebar);
+    sidebarOverlay.addEventListener("click", (e) => {
+      if (e.target === sidebarOverlay) closeSidebar();
+    });
+
+    // Initialization
+    updateCooldownUI();
+    startTimerRefresh();
+
+    window.addEventListener("beforeunload", () => {
+      if (timerInterval) clearInterval(timerInterval);
+    });
+  })();
+</script>
+</body>
+</html>
